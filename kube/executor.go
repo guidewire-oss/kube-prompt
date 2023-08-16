@@ -21,10 +21,17 @@ func Executor(s string) {
 		return
 	}
 	var cmd *exec.Cmd
+	shell := os.Getenv("SHELL")
 	if runtime.GOOS == "darwin" || runtime.GOOS == "linux" {
-		cmd = exec.Command("/bin/sh", "-c", "kubectl "+s)
+		cmd = exec.Command("sh", "-c", "kubectl "+s)
 	} else if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/c", "kubectl "+s)
+		if !strings.EqualFold(os.Getenv("WSL_DISTRO_NAME"), "") {
+			cmd = exec.Command("wsl", "-e", "bash", "-c", "kubectl "+s)
+		} else if strings.Contains(strings.ToLower(shell), "powershell") {
+			cmd = exec.Command("powershell", "/c", "kubectl "+s)
+		} else {
+			cmd = exec.Command("cmd", "/c", "kubectl "+s)
+		}
 	} else {
 		fmt.Println("Unsupported operating system/architecture")
 	}
