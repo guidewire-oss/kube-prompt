@@ -100,7 +100,7 @@ Use "kubectl options" for a list of global command-line options (applies to all 
 	//       --port='': The port that the service should serve on. Copied from the resource being exposed, if unspecified
 }
 
-func ExampleSplitOption() {
+func ExampleSplitOptions() {
 	in := `      --allow-missing-template-keys=true: If true, ignore any errors in templates when a field or map key is missing in
 the template. Only applies to golang and jsonpath output formats.
       --cluster-ip='': ClusterIP to be assigned to the service. Leave empty to auto-allocate, or set to 'None' to create
