@@ -13,18 +13,20 @@ import (
 
 func Executor(s string) {
 	s = strings.TrimSpace(s)
-	if s == "" {
+	switch s {
+	case "":
 		return
-	} else if s == "quit" || s == "exit" {
+	case "quit", "exit":
 		fmt.Println("Bye!")
 		os.Exit(0)
 		return
 	}
 	var cmd *exec.Cmd
 	shell := os.Getenv("SHELL")
-	if runtime.GOOS == "darwin" || runtime.GOOS == "linux" {
+	switch runtime.GOOS {
+	case "darwin", "linux":
 		cmd = exec.Command("sh", "-c", "kubectl "+s)
-	} else if runtime.GOOS == "windows" {
+	case "windows":
 		if !strings.EqualFold(os.Getenv("WSL_DISTRO_NAME"), "") {
 			cmd = exec.Command("wsl", "-e", "bash", "-c", "kubectl "+s)
 		} else if strings.Contains(strings.ToLower(shell), "powershell") {
@@ -32,7 +34,7 @@ func Executor(s string) {
 		} else {
 			cmd = exec.Command("cmd", "/c", "kubectl "+s)
 		}
-	} else {
+	default:
 		fmt.Println("Unsupported operating system/architecture")
 	}
 	cmd.Stdin = os.Stdin
@@ -42,7 +44,6 @@ func Executor(s string) {
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("Got error: %s\n", err.Error())
 	}
-	return
 }
 
 func ExecuteAndGetResult(s string) string {
@@ -55,11 +56,12 @@ func ExecuteAndGetResult(s string) string {
 	out := &bytes.Buffer{}
 
 	var cmd *exec.Cmd
-	if runtime.GOOS == "darwin" || runtime.GOOS == "linux" {
+	switch runtime.GOOS {
+	case "darwin", "linux":
 		cmd = exec.Command("/bin/sh", "-c", "kubectl "+s)
-	} else if runtime.GOOS == "windows" {
+	case "windows":
 		cmd = exec.Command("cmd", "/c", "kubectl "+s)
-	} else {
+	default:
 		fmt.Println("Unsupported operating system/architecture")
 	}
 	cmd.Stdin = os.Stdin
@@ -69,6 +71,5 @@ func ExecuteAndGetResult(s string) string {
 		debug.Log(err.Error())
 		return ""
 	}
-	r := string(out.Bytes())
-	return r
+	return out.String()
 }

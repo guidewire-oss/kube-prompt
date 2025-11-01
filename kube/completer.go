@@ -171,7 +171,7 @@ func (c *Completer) completeOptionArguments(ctx context.Context, d prompt.Docume
 		if option == "-c" || option == "--container" {
 			cmdArgs := getCommandArgs(d)
 			var suggestions []prompt.Suggest
-			if cmdArgs == nil || len(cmdArgs) < 2 {
+			if len(cmdArgs) < 2 {
 				suggestions = getContainerNamesFromCachedPods(ctx, c.client, c.namespace)
 			} else {
 				suggestions = getContainerName(ctx, c.client, c.namespace, cmdArgs[1])

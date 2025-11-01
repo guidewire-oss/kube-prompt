@@ -669,45 +669,6 @@ func getPersistentVolumeSuggestions(ctx context.Context, client *kubernetes.Clie
 	return s
 }
 
-/* Pod Security Policies - DEPRECATED AND REMOVED IN KUBERNETES 1.25+ */
-/*
-var (
-	podSecurityPolicyList atomic.Value
-)
-
-func fetchPodSecurityPolicyList(client *kubernetes.Clientset) {
-	key := "pod_security_policy"
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
-
-	l, _ := client.ExtensionsV1beta1().PodSecurityPolicies().List(ctx, metav1.ListOptions{})
-	podSecurityPolicyList.Store(l)
-	return
-}
-
-func getPodSecurityPolicySuggestions(client *kubernetes.Clientset) []prompt.Suggest {
-	go fetchPodSecurityPolicyList(client)
-	l, ok := podSecurityPolicyList.Load().(policyv1beta1.PodSecurityPolicyList)
-	if !ok || len(l.Items) == 0 {
-		return []prompt.Suggest{}
-	}
-	s := make([]prompt.Suggest, len(l.Items))
-	for i := range l.Items {
-		s[i] = prompt.Suggest{
-			Text: l.Items[i].Name,
-		}
-	}
-	return s
-}
-*/
-
-// Replacement function that returns empty suggestions since PSP is deprecated
-func getPodSecurityPolicySuggestions(client *kubernetes.Clientset) []prompt.Suggest {
-	return []prompt.Suggest{}
-}
-
 /* Pod Templates */
 
 var (

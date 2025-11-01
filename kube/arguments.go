@@ -63,7 +63,6 @@ var resourceTypes = []prompt.Suggest{
 	{Text: "persistentvolumeclaims"},
 	{Text: "persistentvolumes"},
 	{Text: "pod"},
-	{Text: "podsecuritypolicies"},
 	{Text: "podtemplates"},
 	{Text: "replicasets"},
 	{Text: "replicationcontrollers"},
@@ -89,7 +88,6 @@ var resourceTypes = []prompt.Suggest{
 	{Text: "pvc"},
 	{Text: "pv"},
 	{Text: "po"},
-	{Text: "psp"},
 	{Text: "rs"},
 	{Text: "rc"},
 	{Text: "quota"},
@@ -125,7 +123,6 @@ func (c *Completer) argumentsCompleter(ctx context.Context, namespace string, ar
 				{Text: "persistentvolumeclaims"},
 				{Text: "persistentvolumes"},
 				{Text: "pod"},
-				{Text: "podsecuritypolicies"},
 				{Text: "podtemplates"},
 				{Text: "replicasets"},
 				{Text: "replicationcontrollers"},
@@ -150,7 +147,6 @@ func (c *Completer) argumentsCompleter(ctx context.Context, namespace string, ar
 				{Text: "pvc"},
 				{Text: "pv"},
 				{Text: "po"},
-				{Text: "psp"},
 				{Text: "rs"},
 				{Text: "rc"},
 				{Text: "quota"},
@@ -187,8 +183,6 @@ func (c *Completer) argumentsCompleter(ctx context.Context, namespace string, ar
 				return prompt.FilterContains(getPersistentVolumeClaimSuggestions(ctx, c.client, namespace), third, true)
 			case "persistentvolumes", "pv":
 				return prompt.FilterContains(getPersistentVolumeSuggestions(ctx, c.client), third, true)
-			case "podsecuritypolicies", "psp":
-				return prompt.FilterContains(getPodSecurityPolicySuggestions(c.client), third, true)
 			case "podtemplates":
 				return prompt.FilterContains(getPodTemplateSuggestions(ctx, c.client, namespace), third, true)
 			case "replicasets", "rs":
@@ -240,8 +234,6 @@ func (c *Completer) argumentsCompleter(ctx context.Context, namespace string, ar
 				return prompt.FilterContains(getPersistentVolumeClaimSuggestions(ctx, c.client, namespace), third, true)
 			case "persistentvolumes", "pv":
 				return prompt.FilterContains(getPersistentVolumeSuggestions(ctx, c.client), third, true)
-			case "podsecuritypolicies", "psp":
-				return prompt.FilterContains(getPodSecurityPolicySuggestions(c.client), third, true)
 			case "podtemplates":
 				return prompt.FilterContains(getPodTemplateSuggestions(ctx, c.client, namespace), third, true)
 			case "replicasets", "rs":
@@ -306,8 +298,6 @@ func (c *Completer) argumentsCompleter(ctx context.Context, namespace string, ar
 				return prompt.FilterContains(getPersistentVolumeClaimSuggestions(ctx, c.client, namespace), third, true)
 			case "persistentvolumes", "pv":
 				return prompt.FilterContains(getPersistentVolumeSuggestions(ctx, c.client), third, true)
-			case "podsecuritypolicies", "psp":
-				return prompt.FilterContains(getPodSecurityPolicySuggestions(c.client), third, true)
 			case "podtemplates":
 				return prompt.FilterContains(getPodTemplateSuggestions(ctx, c.client, namespace), third, true)
 			case "replicasets", "rs":
@@ -358,8 +348,6 @@ func (c *Completer) argumentsCompleter(ctx context.Context, namespace string, ar
 				return prompt.FilterContains(getPersistentVolumeClaimSuggestions(ctx, c.client, namespace), third, true)
 			case "persistentvolumes", "pv":
 				return prompt.FilterContains(getPersistentVolumeSuggestions(ctx, c.client), third, true)
-			case "podsecuritypolicies", "psp":
-				return prompt.FilterContains(getPodSecurityPolicySuggestions(c.client), third, true)
 			case "podtemplates":
 				return prompt.FilterContains(getPodTemplateSuggestions(ctx, c.client, namespace), third, true)
 			case "replicasets", "rs":

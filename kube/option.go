@@ -117,7 +117,7 @@ func optionCompleter(args []string, long bool) []prompt.Suggest {
 	if long {
 		return prompt.FilterContains(
 			prompt.FilterHasPrefix(suggests, "--", false),
-			strings.TrimLeft(args[l-1], "--"),
+			strings.TrimLeft(args[l-1], "-"),
 			true,
 		)
 	}

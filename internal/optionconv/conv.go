@@ -58,9 +58,7 @@ func ConvertToSuggestions(options []string) []prompt.Suggest {
 	suggestions := make([]prompt.Suggest, 0, len(options))
 	for i := range options {
 		x := convertToSuggest(options[i])
-		for j := range x {
-			suggestions = append(suggestions, x[j])
-		}
+		suggestions = append(suggestions, x...)
 	}
 	return suggestions
 }
