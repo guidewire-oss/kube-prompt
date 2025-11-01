@@ -27,7 +27,6 @@ func init() {
 	endpointList = new(sync.Map)
 	deploymentList = new(sync.Map)
 	daemonSetList = new(sync.Map)
-	eventList = new(sync.Map)
 	secretList = new(sync.Map)
 	ingressList = new(sync.Map)
 	limitRangeList = new(sync.Map)
@@ -303,7 +302,6 @@ func fetchDaemonSetList(ctx context.Context, client *kubernetes.Clientset, names
 
 	l, _ := client.AppsV1().DaemonSets(namespace).List(ctx, metav1.ListOptions{})
 	daemonSetList.Store(namespace, l)
-	return
 }
 
 func getDaemonSetSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -340,7 +338,6 @@ func fetchDeployments(ctx context.Context, client *kubernetes.Clientset, namespa
 
 	l, _ := client.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{})
 	deploymentList.Store(namespace, l)
-	return
 }
 
 func getDeploymentSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -377,7 +374,6 @@ func fetchEndpoints(ctx context.Context, client *kubernetes.Clientset, namespace
 
 	l, _ := client.CoreV1().Endpoints(namespace).List(ctx, metav1.ListOptions{})
 	endpointList.Store(key, l)
-	return
 }
 
 func getEndpointsSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -399,42 +395,6 @@ func getEndpointsSuggestions(ctx context.Context, client *kubernetes.Clientset, 
 	return s
 }
 
-/* Events */
-
-var (
-	eventList *sync.Map
-)
-
-func fetchEvents(ctx context.Context, client *kubernetes.Clientset, namespace string) {
-	key := "event_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
-
-	l, _ := client.CoreV1().Events(namespace).List(ctx, metav1.ListOptions{})
-	eventList.Store(namespace, l)
-	return
-}
-
-func getEventsSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
-	go fetchEvents(ctx, client, namespace)
-	x, ok := eventList.Load(namespace)
-	if !ok {
-		return []prompt.Suggest{}
-	}
-	l, ok := x.(*corev1.EventList)
-	if !ok || len(l.Items) == 0 {
-		return []prompt.Suggest{}
-	}
-	s := make([]prompt.Suggest, len(l.Items))
-	for i := range l.Items {
-		s[i] = prompt.Suggest{
-			Text: l.Items[i].Name,
-		}
-	}
-	return s
-}
 
 /* Node */
 
@@ -451,7 +411,6 @@ func fetchNodeList(ctx context.Context, client *kubernetes.Clientset) {
 
 	l, _ := client.CoreV1().Nodes().List(ctx, metav1.ListOptions{})
 	nodeList.Store(l)
-	return
 }
 
 func getNodeSuggestions(ctx context.Context, client *kubernetes.Clientset) []prompt.Suggest {
@@ -484,7 +443,6 @@ func fetchSecretList(ctx context.Context, client *kubernetes.Clientset, namespac
 
 	l, _ := client.CoreV1().Secrets(namespace).List(ctx, metav1.ListOptions{})
 	secretList.Store(namespace, l)
-	return
 }
 
 func getSecretSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -562,7 +520,6 @@ func fetchLimitRangeList(ctx context.Context, client *kubernetes.Clientset, name
 
 	l, _ := client.CoreV1().LimitRanges(namespace).List(ctx, metav1.ListOptions{})
 	limitRangeList.Store(namespace, l)
-	return
 }
 
 func getLimitRangeSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -614,7 +571,6 @@ func fetchPersistentVolumeClaimsList(ctx context.Context, client *kubernetes.Cli
 
 	l, _ := client.CoreV1().PersistentVolumeClaims(namespace).List(ctx, metav1.ListOptions{})
 	persistentVolumeClaimsList.Store(namespace, l)
-	return
 }
 
 func getPersistentVolumeClaimSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -651,7 +607,6 @@ func fetchPersistentVolumeList(ctx context.Context, client *kubernetes.Clientset
 
 	l, _ := client.CoreV1().PersistentVolumes().List(ctx, metav1.ListOptions{})
 	persistentVolumesList.Store(l)
-	return
 }
 
 func getPersistentVolumeSuggestions(ctx context.Context, client *kubernetes.Clientset) []prompt.Suggest {
@@ -684,7 +639,6 @@ func fetchPodTemplateList(ctx context.Context, client *kubernetes.Clientset, nam
 
 	l, _ := client.CoreV1().PodTemplates(namespace).List(ctx, metav1.ListOptions{})
 	podTemplateList.Store(namespace, l)
-	return
 }
 
 func getPodTemplateSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -721,7 +675,6 @@ func fetchReplicaSetList(ctx context.Context, client *kubernetes.Clientset, name
 
 	l, _ := client.AppsV1().ReplicaSets(namespace).List(ctx, metav1.ListOptions{})
 	replicaSetList.Store(namespace, l)
-	return
 }
 
 func getReplicaSetSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -758,7 +711,6 @@ func fetchReplicationControllerList(ctx context.Context, client *kubernetes.Clie
 
 	l, _ := client.CoreV1().ReplicationControllers(namespace).List(ctx, metav1.ListOptions{})
 	replicationControllerList.Store(namespace, l)
-	return
 }
 
 func getReplicationControllerSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -795,7 +747,6 @@ func fetchResourceQuotaList(ctx context.Context, client *kubernetes.Clientset, n
 
 	l, _ := client.CoreV1().ResourceQuotas(namespace).List(ctx, metav1.ListOptions{})
 	resourceQuotaList.Store(namespace, l)
-	return
 }
 
 func getResourceQuotasSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -832,7 +783,6 @@ func fetchServiceAccountList(ctx context.Context, client *kubernetes.Clientset, 
 
 	l, _ := client.CoreV1().ServiceAccounts(namespace).List(ctx, metav1.ListOptions{})
 	serviceAccountList.Store(namespace, l)
-	return
 }
 
 func getServiceAccountSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -869,7 +819,6 @@ func fetchServiceList(ctx context.Context, client *kubernetes.Clientset, namespa
 
 	l, _ := client.CoreV1().Services(namespace).List(ctx, metav1.ListOptions{})
 	serviceList.Store(namespace, l)
-	return
 }
 
 func getServiceSuggestions(ctx context.Context, client *kubernetes.Clientset, namespace string) []prompt.Suggest {

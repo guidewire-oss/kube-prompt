@@ -23,6 +23,7 @@ jobs:
       uses: golangci/golangci-lint-action@v8
       with:
         version: latest
+        args: --out-format=github-actions --timeout=5m --new-from-rev=origin/master
 
   test:
     name: Test
