@@ -10,39 +10,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
+    - name: Set up Go 1.25.3
+      uses: actions/setup-go@v6
       with:
-        go-version: 1.13
+        go-version: '1.25.3'
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@master
+      uses: actions/checkout@v5
 
     - name: Running golangci-lint
-      env:
-        GO111MODULE: on
-        GOPATH: /home/runner/work/
-      run: |
-        go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-        GOCILINT=${GOPATH}/bin/golangci-lint make lint
+      uses: golangci/golangci-lint-action@v8
+      with:
+        version: latest
+        args: --timeout=5m --new-from-rev=origin/master
 
   test:
     name: Test
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
+    - name: Set up Go 1.25.3
+      uses: actions/setup-go@v6
       with:
-        go-version: 1.13
+        go-version: '1.25.3'
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@master
+      uses: actions/checkout@v5
 
     - name: Running go tests
-      env:
-        GO111MODULE: on
       run: make test
 
